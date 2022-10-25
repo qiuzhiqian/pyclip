@@ -58,12 +58,11 @@ class _PBCopyPBPasteBackend(ClipboardBase):
                                     stderr=subprocess.PIPE,
                                     text=True, encoding=encoding)
         else:
-            raise TypeError(f"data argument must be of type str or bytes, not {type(data)}")
+            raise TypeError("data argument must be of type str or bytes, not {}".format(type(data)))
         stdout, stderr = proc.communicate(data)
         if proc.returncode != 0:
-            raise ClipboardException(f"Copy failed. pbcopy returned code: {proc.returncode!r} "
-                                     f"Stderr: {stderr!r} "
-                                     f"Stdout: {stdout!r}")
+            raise ClipboardException("Copy failed. pbcopy returned code: {!r} Stderr: {!r} Stdout: {!r}"
+                .format(repr(proc.returncode),repr(stderr),repr(stdout)))
         return
 
     def paste(self, encoding=None, text=None, errors=None) -> Union[str, bytes]:
@@ -85,9 +84,8 @@ class _PBCopyPBPasteBackend(ClipboardBase):
             completed_proc = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         if completed_proc.returncode != 0:
-            raise ClipboardException(f"Copy failed. pbcopy returned code: {completed_proc.returncode!r} "
-                                     f"Stderr: {completed_proc.stderr!r} "
-                                     f"Stdout: {completed_proc.stdout!r}")
+            raise ClipboardException("Copy failed. pbcopy returned code: {} Stderr: {} Stdout: {}"
+                .format(repr(completed_proc.returncode),repr(completed_proc.stderr),repr(completed_proc.stdout)))
         return completed_proc.stdout
 
     def clear(self):
@@ -123,7 +121,7 @@ class _PasteboardBackend(ClipboardBase):
         elif isinstance(data, str):
             self.pb.set_contents(data)
         else:
-            raise TypeError(f"data argument must be of type str or bytes, not {type(data)}")
+            raise TypeError("data argument must be of type str or bytes, not {}".format(type(data)))
 
     def paste(self, encoding: str = None, text: bool = None, errors: str = None):
         """

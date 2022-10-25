@@ -29,6 +29,9 @@ def detect_clipboard() -> ClipboardBase:
     elif sys.platform == 'linux' and os.environ.get("WAYLAND_DISPLAY"):
         from .wayland_clip import WaylandClipboard
         return WaylandClipboard()
+    elif sys.platform == 'linux' and os.environ.get("XDG_SESSION_TYPE") == "mir":
+        from .mir_clip import MirClipboard
+        return MirClipboard()
     elif sys.platform == 'linux':
         from .xclip_clip import XclipClipboard
         return XclipClipboard()

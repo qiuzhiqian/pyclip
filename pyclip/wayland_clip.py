@@ -62,13 +62,12 @@ class WaylandClipboard(ClipboardBase):
                 encoding=encoding,
             )
         else:
-            raise TypeError(f"data argument must be of type str or bytes, not {type(data)}")
+            raise TypeError("data argument must be of type str or bytes, not {}".format(type(data)))
         stdout, stderr = proc.communicate(data)
         if proc.returncode != 0:
             raise ClipboardException(
-                f"Copy failed. wl-copy returned code: {proc.returncode!r} "
-                f"Stderr: {stderr!r} "
-                f"Stdout: {stdout!r}"
+                "Copy failed. wl-copy returned code: {} Stderr: {} Stdout: {}"
+                .format(repr(proc.returncode),repr(stderr),repr(stdout))
             )
 
     def paste(self, encoding: str = None, text: bool = None, errors: str = None):
@@ -98,9 +97,8 @@ class WaylandClipboard(ClipboardBase):
 
         if completed_proc.returncode != 0:
             raise ClipboardException(
-                f"Copy failed. wl-paste returned code: {completed_proc.returncode!r} "
-                f"Stderr: {completed_proc.stderr!r} "
-                f"Stdout: {completed_proc.stdout!r}"
+                "Copy failed. wl-paste returned code: {} Stderr: {} Stdout: {}"
+                .format(repr(completed_proc.returncode),repr(completed_proc.stderr),repr(completed_proc.stdout))
             )
         return completed_proc.stdout
 

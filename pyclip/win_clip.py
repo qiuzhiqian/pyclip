@@ -137,7 +137,7 @@ class WindowsClipboard(ClipboardBase):
                 data = ctypes.create_string_buffer(data)
                 clip.SetClipboardData(11, data)
             else:
-                raise TypeError(f"data must be str or bytes, not {type(data)}")
+                raise TypeError("data must be str or bytes, not {}".format(type(data)))
 
     def clear(self) -> None:
         """
@@ -158,11 +158,11 @@ class WindowsClipboard(ClipboardBase):
         if fmt == 15:
             return self._handle_hdrop(data)
         else:
-            raise ValueError(f"Unknown format: {fmt}")
+            raise ValueError("Unknown format: {}".format(fmt))
 
     def _handle_hdrop(self, data: Tuple[str, ]) -> bytes:
         if not isinstance(data, tuple):
-            raise TypeError(f"Unexpected type for HDROP. Data must be tuple, not {type(data)}")
+            raise TypeError("Unexpected type for HDROP. Data must be tuple, not {}".format(type(data)))
         if len(data) > 1:
             raise NotImplementedError("Currently HDROP paste is only supported for single files. It appears multiple files or directories were specified")
         if len(data) < 1:
@@ -189,7 +189,8 @@ class WindowsClipboard(ClipboardBase):
                     d[(fmt, name)] = clip.GetClipboardData(fmt)
                 except pywintypes.error as e:
                     if e.winerror == 0:
-                        warnings.warn(f"Could not retrieve clipboard data for format {name} ({fmt}). Skipping.")
+                        warnings.warn("Could not retrieve clipboard data for format {} ({}). Skipping."
+                            .format(name,fmt))
                         continue
                     raise
         return d
